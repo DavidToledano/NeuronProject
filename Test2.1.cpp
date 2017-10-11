@@ -36,7 +36,7 @@ int main()
     }
     
     
-	cVar<<" -------- POTENTIALS --------"<<endl;    //check
+	cVar<<" -------- POTENTIALS --------"<<endl;
 	while(t<t_stop) {
 		if(t_a <= t and t <= t_b) {
 			neuron1.update(t,dt,Icurrent, Jnull);

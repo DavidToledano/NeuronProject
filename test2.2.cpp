@@ -39,17 +39,20 @@ int main()
 	cVar<<" -------- POTENTIALS --------"<<endl;
 	while(t<t_stop) {
 		if(t_a <= t and t <= t_b) {
-			neuron1.update(t,dt,Icurrent, Jnull);
-			neuron2.update(t,dt,Inull, Jnull);	
+			neuron1.update(Icurrent, Jnull);	
 			if (neuron1.getSpike() == true) {
-				neuron2.update(t,dt,Inull,Jconst);	
+				neuron2.update(Inull,Jconst);	
+			}
+			else {
+				neuron2.update(Inull, Jnull);
 			}
 		}
 		else {
-			neuron1.update(t,dt,Inull, Jnull);
-			neuron2.update(t,dt,Inull, Jnull);
+			neuron1.update(Inull, Jnull);
+			neuron2.update(Inull, Jnull);
 		}
 		t+=dt;    // "t" is incremeted here because "update" (with "updatePot") calculates the pot_ at t+dt (cf equation) 
+		
 		cVar<<"Potential(neuron1) = "<<neuron1.getPot()<< "mV    at t = "<<t<<"ms      "<<"Potential(neuron2) = "<<neuron2.getPot()<< "mV    at t = "<<t<<"ms"<<endl;	
 	}
 	

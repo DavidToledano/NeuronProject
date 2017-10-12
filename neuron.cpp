@@ -68,6 +68,8 @@ void Neuron::updateBuffer(double J) {
 		buffer_[t_%16] = 
 	}
 }
+*/
+
 
 
 	 

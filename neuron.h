@@ -11,20 +11,23 @@ public :
 	double getPot() const;    //To get the potential's value (mV)
 	void setPot(double pot);    //To set the potential value 
 	bool getSpike() const; 
-	vector<double> getSpikes() const;    //To get the the vector of spikes 
+	vector<int> getSpikes() const;    //To get the the vector of spikes 
 	double getSpikeTime(size_t a) const;    //To get the time of a given spike 
 	size_t getSpikesN() const;    //The number of spikes     
-	void update (double I, double J);    //To update the potential of the neuron each dt
-	void updatePot (double dt, double I, double J);    //to calculate the potential of the neuron at t+dt  
-	void updateTime();
-	//void updateBuffer(double J);
+	void update (double I);    //To update the potential of the neuron each h
+	void updatePot (double h, double I, double J);    //to calculate the potential of the neuron at t+h  
+	void updateClock();   
+	int getClock();    //to get the clock of the neuron in 10-4ms
+	void setBuffer(double J);
+	double getBuffer();
 	
 private : 
 	double pot_;    //Membrane potential
-	vector<double> spikes_;    //The times when spikes occured
+	int clock_;    //Internal clock of the neuron 
+	vector<int> spikes_;    //The times (in 10-4s) when spikes occured
+	vector<int> buffer_;
 	bool spike_;
-	double t_;
-	vector<double> buffer_;
+	void initializeBuffer();
 };
 
 #endif	           

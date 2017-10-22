@@ -1,14 +1,13 @@
-#include "neuron.h"
+#include "network.h"
 #include <iostream>
-#include <fstream>
 #include <cmath>
 using namespace std;
 
 int main()
 {	
-	Neuron neuron1;
-	Neuron neuron2;
-	double t(t_start), Icurrent(0.0), Inull(0.0), t_a(0.0), t_b(0.0);
+	Network network(2);
+	int t(t_start), t_a(0), t_b(0);
+	double Icurrent(0.0);
 	
 	do {
 		cout<<"Enter the External Current"<<endl;
@@ -16,54 +15,35 @@ int main()
 	} while(Icurrent==0.0);
 	
 	do {
-		cout<<"Enter the External Time a"<<endl;
+		cout<<"Enter the External Time a (10-4s)"<<endl;
 		cin>>t_a;
 	} while(t_a <= t_start);
 	
 	do {
-		cout<<"Enter the External Time b"<<endl;
+		cout<<"Enter the External Time b (10-4s)"<<endl;
 		cin>>t_b;
 	} while(t_b <= t_start or t_b <= t_a);
-	
-	
-	ofstream cVar;
-    cVar.open("variable.txt");
-    if(cVar.fail()) {
-        cout << "Error while opening the file" << endl;
-    }
-    else {   
-        cout << "Your file could be opened" << endl;
-    }
     
     
-	cVar<<" -------- POTENTIALS --------"<<endl;
+	cout<<" -------- POTENTIALS --------"<<endl;
 	while(t<t_stop) {
 		if(t_a <= t and t <= t_b) {
-			neuron1.update(Icurrent, Jnull);	
-			if (neuron1.getSpike() == true) {
-				neuron2.update(Inull,Jconst);	
-			}
-			else {
-				neuron2.update(Inull, Jnull);
-			}
+			network.update(Icurrent);
 		}
 		else {
-			neuron1.update(Inull, Jnull);
-			neuron2.update(Inull, Jnull);
+			network.update(Inull);
 		}
-		t+=dt;    // "t" is incremeted here because "update" (with "updatePot") calculates the pot_ at t+dt (cf equation) 
 		
-		cVar<<"Potential(neuron1) = "<<neuron1.getPot()<< "mV    at t = "<<t<<"ms      "<<"Potential(neuron2) = "<<neuron2.getPot()<< "mV    at t = "<<t<<"ms"<<endl;	
+		t+=h;
+		
+		cout<<"Potential(neuron1) = "<<network.getNeurons()[0].getPot()<< "mV    at t = "<<t/10<<"ms      "<<"Potential(neuron2) = "<<network.getNeurons()[1].getPot()<< "mV    at t = "<<t/10<<"ms"<<endl;	
 	}
 	
-	cVar<<" -------- SPIKES --------"<<endl;
-	for(size_t i=0; i<neuron1.getSpikesN(); i++) {
-		cVar<<neuron1.getSpikeTime(i)<<"    ";
+	cout<<" -------- SPIKES --------"<<endl;
+	for(size_t i=0; i<network.getNeurons()[0].getSpikesN(); i++) {
+		cout<<network.getNeurons()[0].getSpikeTime(i)/10<<"ms    ";
 	}
 	
-	
-		
-	cVar.close();
 	
 	return 0;
 } 

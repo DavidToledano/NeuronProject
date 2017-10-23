@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {	
 	Network network(2);
-	int t(t_start), t_a(0), t_b(0);
+	double t(t_start), t_a(0), t_b(0);
 	double Icurrent(0.0);
 	
 	do {

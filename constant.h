@@ -16,6 +16,6 @@ const double V_reset(0.0);
 const double Jconst(4.0);
 const double Jnull(0.0);
 const double Inull(0.0);
-const int D(4);   //D is the number of steps h in the delay 
+const int D(15);   //D is the number of steps h in the delay 
 const int bufferSize(D+1);    //the bufffer size is equal to D the number of steps h in the delay + 1 
 #endif

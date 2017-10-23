@@ -27,7 +27,6 @@ private :
 	vector<int> spikes_;    //The times (in 10-4s) when spikes occured
 	vector<int> buffer_;
 	bool spike_;
-	void initializeBuffer();
 };
 
 #endif	           

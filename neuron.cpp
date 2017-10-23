@@ -35,8 +35,8 @@ size_t Neuron::getSpikesN() const {
 }
 
 void Neuron::update (double I) {
-	updatePot(h,I,getBuffer());    //Ce J doit être le J émis il y a "Delay" h 
 	updateClock();
+	updatePot(h,I,getBuffer());    //Ce J doit être le J émis il y a "Delay" h 
 	if(pot_ > V_thr) {
 		spikes_.push_back(clock_);
 		spike_ = true;

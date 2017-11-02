@@ -1,10 +1,14 @@
 #include "neuron.h"
+#include "random"
 #include <cmath>
 
 Neuron::Neuron() 
-	: pot_ (0.0)
+	: pot_ (0.0), clock_(0), n_spikes_(0), spike_(false), e_(true)
 	{
 		spikes_.clear();
+		buffer_.clear();
+		received_connections_.clear();
+		sent_connections_.clear();
 		for(size_t i=0; i < bufferSize; i++) {
 		buffer_.push_back(0.0);
 		}
@@ -30,16 +34,17 @@ double Neuron::getSpikeTime(size_t a) const {
 	return spikes_[a];
 }	
 	
-size_t Neuron::getSpikesN() const {
-	return spikes_.size(); 
+int Neuron::getSpikesN() const {
+	return n_spikes_; 
 }
 
-void Neuron::update (double I) {
+bool Neuron::update (double noise) {
 	updateClock();
-	updatePot(h,I,getBuffer());    //Ce J doit être le J émis il y a "Delay" h 
+	updatePot(getBuffer(),noise);    //Ce J doit être le J émis il y a "Delay" h 
 	if(pot_ > V_thr) {
 		spikes_.push_back(clock_);
 		spike_ = true;
+		n_spikes_++;
 	}
 	else {
 		spike_ = false;
@@ -49,13 +54,13 @@ void Neuron::update (double I) {
 		if(spikes_.back() <= clock_ and clock_ < (spikes_.back()+ t_refra )) {
 			pot_ = V_reset;
 		}
-	}		
+	}
+	
+	return spike_;	
 }
 
-void Neuron::updatePot (double h, double I, double J) {
-	double const1 (exp(-h/tau));
-	double const2 (R*(1-const1));
-	pot_ = ((const1*pot_) + (I*const2) + (J));        //mV
+void Neuron::updatePot (double J, double noise) {
+	pot_ = exp(-h/tau)*pot_ + J + noise;        //mV
 }
 
 void Neuron::updateClock() {
@@ -66,8 +71,13 @@ int Neuron::getClock() {
 	return clock_;
 }
 
-void Neuron::setBuffer(double J) {
- 	buffer_[clock_%(D+1)] += J;
+void Neuron::setBuffer(bool e) {
+	if(e) {
+		buffer_[clock_%(D+1)] += J_e;
+	}
+	else {
+		buffer_[clock_%(D+1)] += J_i;
+	}
 }
 
 double Neuron::getBuffer() {
@@ -76,8 +86,30 @@ double Neuron::getBuffer() {
 	return J;
 }
 
+bool Neuron::getE() {
+	return e_;
+}
 
+void Neuron::setE(bool b) {
+	e_ = b;
+}
 
+vector<int> Neuron::getReceivedConnections() {
+	return received_connections_;
+}
+
+vector<int> Neuron::getSentConnections() {
+	return sent_connections_;
+}
+
+void Neuron::addReceivedConnection(int c) {
+	received_connections_.push_back(c);
+}
+
+void Neuron::addSentConnection(int c) {
+	sent_connections_.push_back(c);
+}
+	
 
 	 
 		

@@ -10,7 +10,7 @@ Network::Network() {
 	
 	uniform_int_distribution<> ExcitatoryReceivedConnectionsGenerator(0,(n_e-1));
 	uniform_int_distribution<> InhibitoryReceivedConnectionsGenerator(n_e,n_e+n_i-1);
-	
+		
 	int c(0);
 	
 	for(size_t i=0; i < n_e; ++i) {    //First of all, let's create the excitatory neurons
@@ -61,20 +61,41 @@ vector<Neuron> Network::getNeurons() const{
 }
 
 void Network::update() {
-	//clock_t time;
 	for(size_t i=0; i < n_neurons; ++i) {
-		//time = clock();
-		if(neurons_[i].update(J_e*pois_dis_(generator))) {
+		if(neurons_[i].update(J_e*pois_dis_(generator))) {    //update return true if the neuron spike_ 
 			for(auto con : neurons_[i].getSentConnections()){
 				neurons_[con].setBuffer(neurons_[i].getE());
+				//neurons_[con].addReceivedSpike(neurons_[con].getClock());    // decomment for the gtest
 			}		
 		}
-		/*
-		time = clock() - time;
-		std::cout << i << " " << ((float)time)/CLOCKS_PER_SEC << " " << neurons_[i].getSpike()<<std::endl;
-		*/	
 	}
 }
+
+void Network::simulation(int t_start, int t_stop) {
+	int t(t_start);
+	while(t<t_stop) {
+		update();
+		t+=h;
+		cout<<t<<endl;
+	}
+}
+
+void Network::file() {
+	ofstream neuron_graph;
+	neuron_graph.open("NeuronGraph.txt");
+	for(size_t i=0; i < n_neurons; ++i) {
+		for(size_t j=0; j<neurons_[i].getSpikes().size(); ++j) {
+			neuron_graph << neurons_[i].getSpikes()[j] << "\t" << i+1 << endl;
+		}
+	}
+	neuron_graph.close();
+}
+	
+			
+	
+	
+	
+	
 				
 
 

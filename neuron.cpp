@@ -3,14 +3,15 @@
 #include <cmath>
 
 Neuron::Neuron() 
-	: pot_ (0.0), clock_(0), n_spikes_(0), spike_(false), e_(true)
+	: pot_ (0.0), clock_(0), n_spikes_(0), spike_(false), e_(true), received_spikes_(0)
 	{
 		spikes_.clear();
 		buffer_.clear();
 		received_connections_.clear();
 		sent_connections_.clear();
+		received_spikes_.clear();
 		for(size_t i=0; i < bufferSize; i++) {
-		buffer_.push_back(0.0);
+			buffer_.push_back(0.0);
 		}
 	}
 	
@@ -40,7 +41,7 @@ int Neuron::getSpikesN() const {
 
 bool Neuron::update (double noise) {
 	updateClock();
-	updatePot(getBuffer(),noise);    //Ce J doit être le J émis il y a "Delay" h 
+	updatePot(bufferAfterDelay(),noise);    //Ce J doit être le J émis il y a "Delay" h 
 	if(pot_ > V_thr) {
 		spikes_.push_back(clock_);
 		spike_ = true;
@@ -73,16 +74,16 @@ int Neuron::getClock() {
 
 void Neuron::setBuffer(bool e) {
 	if(e) {
-		buffer_[clock_%(D+1)] += J_e;
+		buffer_[clock_%(bufferSize)] += J_e;
 	}
 	else {
-		buffer_[clock_%(D+1)] += J_i;
+		buffer_[clock_%(bufferSize)] += J_i;
 	}
 }
 
-double Neuron::getBuffer() {
-	int J(buffer_[clock_%(D+1)]);
-	buffer_[clock_%(D+1)] = 0;
+double Neuron::bufferAfterDelay() {    //returns the value obtained after the delay
+	int J(buffer_[clock_%(bufferSize)]);
+	buffer_[clock_%(bufferSize)] = 0;
 	return J;
 }
 
@@ -109,6 +110,15 @@ void Neuron::addReceivedConnection(int c) {
 void Neuron::addSentConnection(int c) {
 	sent_connections_.push_back(c);
 }
+
+vector<int> Neuron::getReceivedSpikes() {
+	return received_spikes_;
+}
+	
+void Neuron::addReceivedSpike(int t) {
+	received_spikes_.push_back(t+D);
+}
+	
 	
 
 	 

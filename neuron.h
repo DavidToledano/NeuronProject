@@ -19,13 +19,15 @@ public :
 	void updateClock();   
 	int getClock();    //to get the clock of the neuron in 10-4ms
 	void setBuffer(bool e);
-	double getBuffer();
+	double bufferAfterDelay();
 	bool getE();
 	void setE(bool b);
 	vector<int> getReceivedConnections();
 	vector<int> getSentConnections();
 	void addReceivedConnection(int c);
 	void addSentConnection(int c);
+	vector<int> getReceivedSpikes();
+	void addReceivedSpike(int t);
 	
 private : 
 	double pot_;    //Membrane potential
@@ -37,6 +39,7 @@ private :
 	bool e_;    //true if the neuron is exitatory, false if he is inhibitory
 	vector<int> received_connections_;    //The values this vector are the number of the neurons (where they are in neurons_) that are connected to the current neurons : in the following way the current neuron receives potential from them
 	vector<int> sent_connections_;    //The values this vector are the number of the neurons (where they are in neurons_) that are connected to the current neurons in the following way : the current neuron sends potential to them
+	vector<int> received_spikes_;   //for a Gtest
 };
 
 #endif	           

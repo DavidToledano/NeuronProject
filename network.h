@@ -2,6 +2,8 @@
 #define NETWORK_HPP
 #include "neuron.h" 
 #include "random"
+#include <fstream>
+
 using namespace std;
 
 class Network {
@@ -10,6 +12,8 @@ public :
 	Network();
 	vector<Neuron> getNeurons() const;
 	void update();
+	void simulation(int t_start, int t_stop);
+	void file();
 
 private :
 	vector<Neuron> neurons_;

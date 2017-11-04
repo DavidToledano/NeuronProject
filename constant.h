@@ -8,8 +8,6 @@ const int tau(200);
 const int C(10);
 const double R(tau/C);
 const int h(1);    //10-4s
-const int t_start(0);
-const int t_stop(10000);
 const int t_refra(20);
 const double V_thr(20.0);    //mV
 const double V_reset(0.0);
@@ -28,6 +26,5 @@ const double C_tot(C_e+C_i);    //the total number of connections for each neuro
 const double mu_thr(V_thr/(C_e*J_e*tau));
 const double mu_ext(2*mu_thr);
 const double lambda(mu_ext*C_e*h*J_e*10);    //parameter for Poisson Distribution
-
 
 #endif

@@ -2,7 +2,14 @@
 #include "random"
 #include <cmath>
 
-Neuron::Neuron() 
+/**
+*  Constructor
+*/
+
+Neuron::Neuron()
+/**
+ * The constructor inisializes the neuron's attributs 
+ */
 	: pot_ (0.0), clock_(0), n_spikes_(0), spike_(false), e_(true), received_spikes_(0)
 	{
 		spikes_.clear();
@@ -14,13 +21,16 @@ Neuron::Neuron()
 			buffer_.push_back(0.0);
 		}
 	}
+
+
+/*****************************************************/	
+
+/**
+ * ... Getters ...
+ */
 	
 double Neuron::getPot() const {
 	return pot_; 
-}
-
-void Neuron::setPot(double pot) {
-	pot_ = pot;
 }
 
 bool Neuron::getSpike() const {
@@ -39,37 +49,45 @@ int Neuron::getSpikesN() const {
 	return n_spikes_; 
 }
 
-bool Neuron::update (double noise) {
-	updateClock();
-	updatePot(bufferAfterDelay(),noise);    //Ce J doit être le J émis il y a "Delay" h 
-	if(pot_ > V_thr) {
-		spikes_.push_back(clock_);
-		spike_ = true;
-		n_spikes_++;
-	}
-	else {
-		spike_ = false;
-	}
-		
-	if(!spikes_.empty()) {
-		if(spikes_.back() <= clock_ and clock_ < (spikes_.back()+ t_refra )) {
-			pot_ = V_reset;
-		}
-	}
-	
-	return spike_;	
-}
-
-void Neuron::updatePot (double J, double noise) {
-	pot_ = exp(-h/tau)*pot_ + J + noise;        //mV
-}
-
-void Neuron::updateClock() {
-	clock_+=h;
-}
-
-int Neuron::getClock() {
+int Neuron::getClock() const {
 	return clock_;
+}
+
+double Neuron::bufferAfterDelay() {
+	int J(buffer_[clock_%(bufferSize)]);
+	/** When we access to the buffer, 
+	 * we have to immidiatly reinitialize it 
+	 * for the next spikes
+	 */
+	buffer_[clock_%(bufferSize)] = 0;
+	return J;
+}
+
+bool Neuron::getE() {
+	return e_;
+}
+
+vector<int> Neuron::getReceivedConnections() {
+	return received_connections_;
+}
+
+vector<int> Neuron::getSentConnections() {
+	return sent_connections_;
+}
+
+vector<int> Neuron::getReceivedSpikes() {
+	return received_spikes_;
+}
+
+
+/*****************************************************/	
+
+/** 
+ * ... Setters ...
+ */
+
+void Neuron::setPot(double pot) {
+	pot_ = pot;
 }
 
 void Neuron::setBuffer(bool e) {
@@ -81,27 +99,59 @@ void Neuron::setBuffer(bool e) {
 	}
 }
 
-double Neuron::bufferAfterDelay() {    //returns the value obtained after the delay
-	int J(buffer_[clock_%(bufferSize)]);
-	buffer_[clock_%(bufferSize)] = 0;
-	return J;
-}
-
-bool Neuron::getE() {
-	return e_;
-}
-
 void Neuron::setE(bool b) {
 	e_ = b;
 }
 
-vector<int> Neuron::getReceivedConnections() {
-	return received_connections_;
+
+/*****************************************************/
+
+/**
+ * ... Updaters ...
+ */
+
+bool Neuron::update (double noise) {
+	updateClock();
+	updatePot(bufferAfterDelay(),noise);
+	/** The clock is updated first and then we calculate the potential 
+	 * because the differential equation calculate "V(t+h)".
+	 */
+	if(pot_ > V_thr) {
+		spikes_.push_back(clock_);
+		spike_ = true;
+		n_spikes_++;
+	}
+	else {
+		spike_ = false;
+	}
+	
+	/** Dealing with the refractory time
+	 */
+	if(!spikes_.empty()) {
+		if(spikes_.back() <= clock_ and clock_ < (spikes_.back()+ t_refra )) {
+			pot_ = V_reset;
+		}
+	}
+	
+	return spike_;
+	/** Update return true if the neuron is spiking 
+	 */ 	
 }
 
-vector<int> Neuron::getSentConnections() {
-	return sent_connections_;
+void Neuron::updatePot (double J, double noise) {
+	pot_ = exp(-h/tau)*pot_ + J + noise;	/** mV */
 }
+
+void Neuron::updateClock() {
+	clock_+=h;
+}
+
+
+/*****************************************************/
+
+/**
+ * ... Adders ...
+ */
 
 void Neuron::addReceivedConnection(int c) {
 	received_connections_.push_back(c);
@@ -110,14 +160,13 @@ void Neuron::addReceivedConnection(int c) {
 void Neuron::addSentConnection(int c) {
 	sent_connections_.push_back(c);
 }
-
-vector<int> Neuron::getReceivedSpikes() {
-	return received_spikes_;
-}
 	
 void Neuron::addReceivedSpike(int t) {
 	received_spikes_.push_back(t+D);
 }
+
+
+/*****************************************************/
 	
 	
 

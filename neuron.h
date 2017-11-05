@@ -4,42 +4,197 @@
 #include <vector> 
 using namespace std;
 
+/**
+ * ... The Neuron Class ...
+ */
+
 class Neuron {
 	
-public :
-	Neuron();    //Default Constructor
-	double getPot() const;    //To get the potential's value (mV)
-	void setPot(double pot);    //To set the potential value 
-	bool getSpike() const; 
-	vector<int> getSpikes() const;    //To get the the vector of spikes 
-	double getSpikeTime(size_t a) const;    //To get the time of a given spike 
-	int getSpikesN() const;    //The number of spikes     
-	bool update (double noise);    //To update the potential of the neuron each h
-	void updatePot (double J, double noise);    //to calculate the potential of the neuron at t+h  
-	void updateClock();   
-	int getClock();    //to get the clock of the neuron in 10-4ms
-	void setBuffer(bool e);
-	double bufferAfterDelay();
-	bool getE();
-	void setE(bool b);
-	vector<int> getReceivedConnections();
-	vector<int> getSentConnections();
-	void addReceivedConnection(int c);
-	void addSentConnection(int c);
-	vector<int> getReceivedSpikes();
-	void addReceivedSpike(int t);
-	
 private : 
-	double pot_;    //Membrane potential
-	int clock_;    //Internal clock of the neuron 
-	vector<int> spikes_;    //The times (in 10-4s) when spikes occured
-	int n_spikes_;
-	vector<int> buffer_;
-	bool spike_;
-	bool e_;    //true if the neuron is exitatory, false if he is inhibitory
-	vector<int> received_connections_;    //The values this vector are the number of the neurons (where they are in neurons_) that are connected to the current neurons : in the following way the current neuron receives potential from them
-	vector<int> sent_connections_;    //The values this vector are the number of the neurons (where they are in neurons_) that are connected to the current neurons in the following way : the current neuron sends potential to them
-	vector<int> received_spikes_;   //for a Gtest
+
+	/**
+	 * ... General Attributes ...
+	 */
+	
+	double pot_;    
+	/**< pot_ = membrane potential in mV */
+	
+	int clock_;    
+	/**< clock_ = internal clock of the neuron in 10-4s */
+	
+	vector<int> spikes_;
+	/**< spikes_ = vector of all spikes sent by the neuron. 
+	 * Each case correspond to the time when the spike occured */
+	 
+	int n_spikes_;    
+	/**< n_spikes_ = number of spikes sent by a  */
+	
+	vector<int> buffer_;    
+	/**< buffer_ = vector that enable the neuron to receive a spike 
+	 * from anoter neuron after a delay */
+	 
+	bool spike_;    
+	/**< spike_ = true if the neuron is spiking, false if he is not */
+	
+	bool e_;    
+	/**< e_= true if the neuron is exitatory, false if he is inhibitory */
+	
+	vector<int> received_connections_;    
+	/** < received_connections_ = The values in the cases of this vector 
+	 * are the index of the neurons (where they are in neurons_(cf network))
+	 * that are connected to the current neurons in the following way : 
+	 * the current neuron receives potential from them */ 
+	    
+	vector<int> sent_connections_;    
+	/** < sent_connections_ = The values in the cases of this vector
+	 *  are the index of the neurons (where they are in neurons_(cf network)) 
+	 * that are connected to the current neurons in the following way : 
+	 * the current neuron sends potential to them */
+	 
+	vector<int> received_spikes_;    
+	/**< received_spikes_ = vector that contains the time (after the delay of each each spike received by the neuron */   //for a Gtest
+	
+	
+
+	
+public :
+
+	/*****************************************************/
+
+	/**
+	 * ... Constructor ...
+	 */
+	 
+	Neuron();
+	
+	
+	/*****************************************************/
+	 
+	/**
+	 * ... Getters ...
+	 */
+	
+	double getPot() const;    
+	/** @return pot_ */
+	
+	bool getSpike() const;    
+	/** @return spike_ */
+	
+	vector<int> getSpikes() const;    
+	/** @return spikes_ */ 
+	
+	double getSpikeTime(size_t a) const;    
+	/** 
+	 * @param a : the index of the spike
+	 * we are insterested in
+	 * @return the time of given spike */
+	
+	int getSpikesN() const;    
+	/** @return the number of spike */
+	
+	int getClock() const;    
+	/** @return clock_ */
+	
+	double bufferAfterDelay();    
+	/** @return the incoming potential J 
+	 * from another neuron, sent at a given time, 
+	 * and received by the neuron after the delay*/
+	 
+	bool getE();    
+	/** @return e_ */
+	
+	vector<int> getReceivedConnections();    
+	/** @return received_connections_ */
+	
+	vector<int> getSentConnections();    
+	/** @return sent_connections_ */
+	
+	vector<int> getReceivedSpikes();    
+	/** @return received_spikes_ */
+	
+	
+	/*****************************************************/
+	
+	/**
+	 * ... Setters ...
+	 */
+	 
+	void setPot(double pot);
+	/** @param pot : to set the potentiel */
+	
+	void setBuffer(bool e);
+	/** @param e : to set the buffer 
+	 * depending on the state (e)
+	 * of the sending neuron*/
+	 
+	void setE(bool b);
+	/** @param b : to set the state of the neuron*/
+	
+	
+	/*****************************************************/
+	
+	/**
+	 * ... Updates ...
+	 */
+	 
+	bool update (double noise);
+	/** @param noise : to update the potential of the neuron 
+	 * with a random noise, generated by external neurons
+	 */
+	 
+	void updatePot (double J, double noise);
+	/** @param J : to add the inconming potential stored
+	 * in the buffer in the differential equation 
+	 * which calculate the potenial, taking in account
+	 * the previous potential of the neuron 
+	 * @param noise : same paramater of the update method
+	 * because updatePot is called in update 
+	 */
+	 
+	void updateClock();
+	/** to update the clock
+	 * going in a new step
+	 */
+	 
+	 
+	/*****************************************************/
+	
+	/** 
+	 * ... Adders ... 
+	 */
+
+	void addReceivedConnection(int c);
+	/** @param c : to connect the neuron 
+	 * with the neuron at index c
+	 * (where they are in neurons_(cf network))
+	 * by adding the this index in a case of 
+	 * the vector received_connections_
+	 * so that this neuron will be able 
+	 * to send spike to the current neuron
+	 */
+	 
+	void addSentConnection(int c);
+	/** @param c : to connect the neuron 
+	 * with the neuron at index c
+	 * (where they are in neurons_(cf network))
+	 * by adding the this index in a case of 
+	 * the vector sent_connections_
+	 * so that that the current neuron will 
+	 * be able to send spike the neuron of index c
+	 */
+	 
+	void addReceivedSpike(int t);
+	/** @param t : to reveice a spike at (t+D)
+	 * which is send at time t
+	 * ONLY FOR A GTEST 
+	 */
+	 
+	 
+	/*****************************************************/
+	 
+	 
+	 
+	
 };
 
 #endif	           

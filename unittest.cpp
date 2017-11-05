@@ -11,15 +11,22 @@ int main(int argc, char **argv) {
 	return RUN_ALL_TESTS();
 }
 
+
+/** ... TEST 1 .../
+ * Only to test Gtest 
+ */
 TEST (NeuronTest, potential) {
 	Neuron n1;
 	EXPECT_EQ(0, n1.getPot());
 }
 
+/** ... TEST 2&3 .../
+ * inside the same Gtest
+ */
 TEST (NeuronTest, spike) {
 	Network network;
 	int t(0);
-	/* we want to check what happens 
+	/** we want to check what happens 
 	 * when the first neuron is spiking 
 	 * for the first time
 	*/
@@ -27,12 +34,14 @@ TEST (NeuronTest, spike) {
 		network.update();
 		t+=h;
 	}
-	EXPECT_EQ(0, network.getNeurons()[0].getPot());    // Did the neuron well enter in the refractory time
+	EXPECT_EQ(0, network.getNeurons()[0].getPot());    /** Did the neuron well enter in the refractory time */
 	
-	/* For all the neuron which receives a potentiel from the spiking neurons_[0],
+	/** For all the neuron which receives a potentiel from the spiking neurons_[0],
 	 * if the spike/potential(J) of neurons_[0] is the only spike/potential(J)
 	 * that it (the neuron which receives a potentiel from neurons_[0])
 	 * receives among all the received connections he has,
+	 * (we want it to be the only one to check the precise behavior 
+	 * of one spike)
 	 * the expected value of the buffers after the delay of the neurons
 	 * that receive a spike only from neurons_[0]
 	 * is J_e

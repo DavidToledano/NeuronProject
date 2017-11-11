@@ -54,7 +54,7 @@ int Neuron::getClock() const {
 }
 
 double Neuron::bufferAfterDelay() {
-	int J(buffer_[clock_%(bufferSize)]);
+	double J(buffer_[clock_%(bufferSize)]);
 	/** When we access to the buffer, 
 	 * we have to immidiatly reinitialize it 
 	 * for the next spikes
@@ -92,10 +92,10 @@ void Neuron::setPot(double pot) {
 
 void Neuron::setBuffer(bool e) {
 	if(e) {
-		buffer_[clock_%(bufferSize)] += J_e;
+		buffer_[(clock_+D)%(bufferSize)] += J_e;
 	}
 	else {
-		buffer_[clock_%(bufferSize)] += J_i;
+		buffer_[(clock_+D)%(bufferSize)] += J_i;
 	}
 }
 
@@ -110,9 +110,9 @@ void Neuron::setE(bool b) {
  * ... Updaters ...
  */
 
-bool Neuron::update (double noise) {
+bool Neuron::update (double I, double noise) {
 	updateClock();
-	updatePot(bufferAfterDelay(),noise);
+	updatePot(I, bufferAfterDelay(),noise);
 	/** The clock is updated first and then we calculate the potential 
 	 * because the differential equation calculate "V(t+h)".
 	 */
@@ -138,9 +138,11 @@ bool Neuron::update (double noise) {
 	 */ 	
 }
 
-void Neuron::updatePot (double J, double noise) {
-	pot_ = exp(-h/tau)*pot_ + J + noise;	/** mV */
+
+void Neuron::updatePot (double I, double J, double noise) {
+	pot_ = exp(-h/tau)*pot_ + I*R*(1-exp(-h/tau)) + J + noise;	/** mV */
 }
+
 
 void Neuron::updateClock() {
 	clock_+=h;

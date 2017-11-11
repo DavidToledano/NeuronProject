@@ -11,7 +11,7 @@ using namespace std;
 const double tau(200.0);      /**< constant for the differential equation */
 const double C(10.0);         /**< constant for the differential equation */
 const double R(tau/C);        /**< constant for the differential equation */
-const double h(1.0);          /**< the step (10-4s) */
+const int h(1);          	  /**< the step (10-4s) */
 const int t_refra(20);        /**< the length of therefractory period */
 const double V_thr(20.0);     /**< the threshold */
 const double V_reset(0.0);    /**< the potnetial reset after a spike */

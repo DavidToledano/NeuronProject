@@ -61,10 +61,18 @@ TEST (TwoNeurons, SpikeDelayBuffer) {
 	EXPECT_EQ(net.getNeurons()[1].getClock(), spikeTimeNeuron1 + D);/** occur after the delay. 				   */
 	EXPECT_EQ(net.getNeurons()[1].getPot(), J_e);				   /** At this momoment, the potential 		  */
 }																  /** of the second neuron should be the J_e */
+
+/** ... TEST 6 .../
+ */
+TEST (Network, ReceivedConnections) {
+	Network network;
+	int a(network.getNeurons()[0].getReceivedConnections().size());
+	EXPECT_EQ(a,1250);	
+}
 	
 
 
-/** ... TEST 6 .../
+/** ... TEST 7 .../
 	* This test is a bit long (more than five minutes) and doesn't work perfectly
 	* So I have decided to skip it 
 	* but I prefer to leave it hear because I took a lot of time to design it 
@@ -119,6 +127,7 @@ TEST (TwoNeurons, SpikeDelayBuffer) {
 	}
 }
 */
+	
 	
 			
 

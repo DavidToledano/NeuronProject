@@ -24,6 +24,13 @@ Network::Network() {
 		neurons_.push_back(Neuron());
 		neurons_[i].setE(true);
 	}
+	/** Let's create the inhibitory neurons
+	 */
+	for(size_t i=0; i < n_i; ++i) {
+		neurons_.push_back(Neuron());
+		neurons_[n_e+i].setE(false);
+	}
+	
 	/** Here, the main difficulty is that we dont't know the precise number of connections sent by a neuron, and we need this value
 	 * but we do know the precise number of connexions received by a neuron (given in the course). 
 	 * Before arriving to this code, I was dealing only with the number of connections received, and in the updateNetwork, 
@@ -51,12 +58,7 @@ Network::Network() {
 		}
 	}
 	
-	/** Let's create the inhibitory neurons
-	 */
-	for(size_t i=0; i < n_i; ++i) {
-		neurons_.push_back(Neuron());
-		neurons_[n_e+i].setE(false);
-	}
+
 	for(size_t i=0; i < n_i; ++i) {
 		/** among all the excitatatory neurons, we chose C_e 
 		 * that will be connected to the current inhibitory neuron */
@@ -92,7 +94,7 @@ void Network::update() {
 			/** Here, each neuron of neurons_ updates and also returns a boolean telling if he is spiking or not */
 			for(auto con : neurons_[i].getSentConnections()){
 				neurons_[con].setBuffer(neurons_[i].getE());
-				// neurons_[con].addReceivedSpike(neurons_[con].getClock());    // For the TEST 6 I have decided to skip
+				// neurons_[con].addReceivedSpike(neurons_[con].getClock());    // For the TEST 7 I have decided to skip
 			}		
 		}
 	}

@@ -34,7 +34,7 @@ private :
 	vector<double> buffer_;    
 	 
 	/**< spike_ = true if the neuron is spiking, false if he is not 
-	 * for a Gtest */
+	 * for a gtest */
 	bool spike_;    
 	
 	/**< e_= true if the neuron is exitatory, false if he is inhibitory */
@@ -53,7 +53,7 @@ private :
 	vector<int> sent_connections_;    
 	 
 	/**< received_spikes_ = vector that contains the time (after the delay of each each spike received by the neuron */
-	vector<int> received_spikes_;    									//for the TEST 6 I have decided to skip
+	vector<int> received_spikes_;    									//for the TEST 7 I have decided to skip
 	
 	
 
@@ -184,7 +184,7 @@ public :
 	 
 	/** @param t : to reveice a spike at (t+D)
 	 * which is send at time t
-	 * ONLY FOR A GTEST */
+	 * ONLY FOR THE TEST 7 */
 	void addReceivedSpike(int t);
 	 
 	 

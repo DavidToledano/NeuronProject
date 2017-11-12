@@ -1,12 +1,14 @@
 ********READ ME*********
 
-First you need to create all the build files used to compile the program with cmake.
+First you need to create all the build files used to compile the program with "cmake".
 
-Then, you can compile the executables files with the commad make.
+Then, you can compile the executables files with the command "make".
 
-To run them, use the command ./neuron.
+To run them, use the command "./neuron".
 
-To run the google tests, use the commad ./runGtest
+To run the google tests, use the commad "./runGtest".
+
+You can also generate a doxygen documentation with the command "doxygen DoxyFile.in"
 
 The tests 2.1 and test 2.2 are my main for the the step 2 of the project
 before that I use the gtests. They use an old version of my code.

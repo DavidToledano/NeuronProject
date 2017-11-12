@@ -1,9 +1,12 @@
 ********READ ME*********
 
+First you need to create all the build files used to compile the program with cmake.
+
+Then, you can compile the executables files with the commad make.
+
+To run them, use the command ./neuron.
+
+To run the google tests, use the commad ./runGtest
+
 The tests 2.1 and test 2.2 are my main for the the step 2 of the project
-before that I use the gtests.
-
-They use an old version of my code.
-
-To run the the final code, we compile the main.cpp, neuron.cpp and network.cpp
-with the make command, and then, we do ./neuron
+before that I use the gtests. They use an old version of my code.
